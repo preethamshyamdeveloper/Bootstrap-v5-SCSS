@@ -1,0 +1,90 @@
+$primary:#401f7c;
+$secondary: #f4f4f4;
+$border-radius:0;
+$border-radius-sm:0;
+$border-radius-lg:0;
+
+$utilities: () !default;
+$utilities: map-merge(
+    (
+        'input-padding':(
+            property: padding,
+            class:ip,
+            values:(
+                0:0,
+                1:0.3rem,
+                2:0.5rem,
+                3:0.7rem,
+                4:0.9rem,
+                5:1rem,
+            ),
+        ),
+    ),
+    $utilities
+);
+
+@import './style';
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+
+// @mixin color-modifiers($attribute, $prefix,$background:'background') {
+//     @each $name, $hex in $colors {
+//       &#{if($attribute != $background ,#{$prefix}#{$name},#{$prefix}#{$name}#{$prefix}#{$background})} {
+//         #{$attribute}: $hex;
+//       }
+//     }
+//   }
+
+// https://www.sassmeister.com/gist/4d2cc04a636e8039f10a889a0e29fbd9
+@mixin color-modifiers($attribute, $prefix,$background:'background') {
+    @each $name, $hex in $colors {
+      &#{$prefix}#{$attribute} {
+        #{$attribute}: $hex;
+      }
+    }
+  }
+.text {
+    @include color-modifiers($attribute:'color', $prefix: '-');
+    @include color-modifiers($attribute:'background', $prefix: '-');
+  }
+
+
+
+//              <-IMPORTANT-> 
+// HOW TO PROCESS MULTIPLE SASS MAP AT ONCE
+$flex-direction: (
+  "name": "flex-direction",
+  "prefix": "flx-d",
+  "values": (
+    "r": "row",
+    "c": "column",
+    "rr": "row-reverse",
+    "cr": "column-reverse"
+  )
+);
+
+$flex-wrap: (
+  "name": "flex-wrap",
+  "prefix": "flx-w",
+  "values": (
+    "nw": "nowrap",
+    "w": "wrap",
+    "wr": "wrap-reverse"
+  )
+);
+
+@mixin createClasses($maps...) {
+  @each $map in $maps {
+    $propertyName: map-get($map, "name");
+    $propertyPrefix: map-get($map, "prefix");
+
+    @each $value, $key in map-get($map, "values") {
+      .#{$propertyPrefix}-#{$value} {
+        #{$propertyName}: #{$key};
+      }
+    }
+  }
+}
+
+@include createClasses($flex-direction, $flex-wrap);
+
